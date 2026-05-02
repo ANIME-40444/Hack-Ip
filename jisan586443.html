@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Hacker IP Scanner</title>
+
+<style>
+body {
+  margin: 0;
+  background: black;
+  color: #00ff00;
+  font-family: monospace;
+  overflow: hidden;
+}
+
+/* Matrix Background */
+canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: -1;
+}
+
+/* Center Box */
+.container {
+  text-align: center;
+  margin-top: 100px;
+}
+
+input, button {
+  padding: 12px;
+  background: black;
+  color: #00ff00;
+  border: 1px solid #00ff00;
+  font-size: 16px;
+}
+
+button:hover {
+  background: #00ff00;
+  color: black;
+  cursor: pointer;
+}
+
+#output {
+  margin-top: 20px;
+  white-space: pre-line;
+  font-size: 18px;
+}
+
+/* Progress Bar */
+.progress {
+  width: 60%;
+  margin: 20px auto;
+  border: 1px solid #00ff00;
+}
+
+.bar {
+  width: 0%;
+  height: 20px;
+  background: #00ff00;
+}
+</style>
+</head>
+
+<body>
+
+<canvas id="matrix"></canvas>
+
+<div class="container">
+<h2>⚠️ IP TRACKING SYSTEM v5.7</h2>
+<p style="color:red;">Simulation Only - No Real Tracking</p>
+
+<input type="text" id="ip" placeholder="Enter Target IP">
+<br>
+<button onclick="startHack()">INITIATE SCAN</button>
+
+<div class="progress">
+  <div class="bar" id="bar"></div>
+</div>
+
+<div id="output"></div>
+</div>
+
+<script>
+// MATRIX EFFECT
+let canvas = document.getElementById("matrix");
+let ctx = canvas.getContext("2d");
+
+canvas.height = window.innerHeight;
+canvas.width = window.innerWidth;
+
+let letters = "01";
+letters = letters.split("");
+
+let fontSize = 14;
+let columns = canvas.width/fontSize;
+let drops = [];
+
+for(let x = 0; x < columns; x++)
+  drops[x] = 1;
+
+function draw() {
+  ctx.fillStyle = "rgba(0,0,0,0.05)";
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  ctx.fillStyle = "#0F0";
+  ctx.font = fontSize + "px monospace";
+
+  for(let i = 0; i < drops.length; i++) {
+    let text = letters[Math.floor(Math.random()*letters.length)];
+    ctx.fillText(text, i*fontSize, drops[i]*fontSize);
+
+    if(drops[i]*fontSize > canvas.height && Math.random() > 0.975)
+      drops[i] = 0;
+
+    drops[i]++;
+  }
+}
+
+setInterval(draw, 33);
+
+
+// FAKE HACK SYSTEM
+function startHack() {
+  let ip = document.getElementById("ip").value;
+  let output = document.getElementById("output");
+  let bar = document.getElementById("bar");
+
+  output.innerHTML = "";
+  bar.style.width = "0%";
+
+  let progress = 0;
+
+  let interval = setInterval(() => {
+    progress += 5;
+    bar.style.width = progress + "%";
+
+    if(progress >= 100) {
+      clearInterval(interval);
+      fakeData(ip);
+    }
+  }, 200);
+}
+
+function typeLine(text, delay=50) {
+  return new Promise(resolve => {
+    let i = 0;
+    let output = document.getElementById("output");
+    let interval = setInterval(() => {
+      output.innerHTML += text[i];
+      i++;
+      if(i >= text.length) {
+        clearInterval(interval);
+        output.innerHTML += "\n";
+        resolve();
+      }
+    }, delay);
+  });
+}
+
+async function fakeData(ip) {
+  await typeLine("Connecting to target: " + ip);
+  await typeLine("Bypassing firewall...");
+  await typeLine("Access Granted ✔");
+  await typeLine("Fetching data...");
+
+  await typeLine("Location: Dhaka, Bangladesh");
+  await typeLine("ISP: Grameenphone Ltd");
+  await typeLine("Device: Android 14");
+  await typeLine("Battery: 67%");
+  await typeLine("Face ID: MATCHED ✔");
+  await typeLine("Fingerprint: VERIFIED ✔");
+
+  await typeLine("WARNING: DEVICE ACCESS ENABLED ⚠️", 30);
+}
+</script>
+
+</body>
+</html>
